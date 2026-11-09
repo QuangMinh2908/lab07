@@ -1,0 +1,45 @@
+﻿@model IEnumerable<_25DH110979_quangminh.Models.Order>
+
+@{
+    ViewBag.Title = "Quản lý đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid mt-3">
+    <h2>QUẢN LÝ ĐƠN HÀNG</h2>
+    <hr />
+
+    @using (Html.BeginForm("Index", "OrdersManager", FormMethod.Get, new { @class = "mb-3 d-flex gap-2" }))
+    {
+        <input type="text" name="searchString" class="form-control" style="width: 300px;" placeholder="Tìm theo tên khách hoặc mã đơn..." />
+        <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+    }
+
+    <table class="table table-bordered table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th>Mã đơn</th>
+                <th>Khách hàng</th>
+                <th>Ngày đặt</th>
+                <th>Tổng tiền</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>#@item.OrderID</td>
+                    <td>@(item.Customer != null ? item.Customer.CustomerName : "Khách lẻ")</td>
+                    <td>@item.OrderDate.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td class="text-danger font-weight-bold">@string.Format("{0:N0} VNĐ", item.TotalAmount)</td>
+                    <td>@item.PaymentStatus</td>
+                    <td>
+                        <a href="@Url.Action("Details", "OrdersManager", new { id = item.OrderID })" class="btn btn-sm btn-info">Chi tiết</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

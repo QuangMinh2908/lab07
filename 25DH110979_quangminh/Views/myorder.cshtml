@@ -1,0 +1,36 @@
+﻿@model IEnumerable<_25DH110979_quangminh.Models.Order>
+
+@{
+    ViewBag.Title = "Lịch sử mua hàng";
+}
+
+<div class="container mt-4">
+    <h2>LỊCH SỬ MUA HÀNG</h2>
+    <hr />
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Mã đơn hàng</th>
+                <th>Ngày đặt</th>
+                <th>Tổng tiền</th>
+                <th>Trạng thái thanh toán</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>#@item.OrderID</td>
+                    <td>@item.OrderDate.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td class="text-danger fw-bold">@string.Format("{0:N0} VNĐ", item.TotalAmount)</td>
+                    <td><span class="badge bg-info">@item.PaymentStatus</span></td>
+                    <td>
+                        <a href="@Url.Action("ReOrder", "Order", new { orderId = item.OrderID })" class="btn btn-sm btn-warning">Mua lại</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

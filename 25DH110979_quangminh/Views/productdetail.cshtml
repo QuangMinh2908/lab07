@@ -1,0 +1,48 @@
+﻿@model _25DH110979_quangminh.Models.ViewModel.ProductDetailVM
+
+@{
+    ViewBag.Title = Model.Product.ProductName;
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-5">
+            <img src="~/Content/images/@Model.Product.ProductImage" class="img-fluid rounded border" alt="@Model.Product.ProductName" />
+        </div>
+        <div class="col-md-7">
+            <h2>@Model.Product.ProductName</h2>
+            <p class="text-muted">Danh mục: @(Model.Product.Category != null ? Model.Product.Category.CategoryName : "")</p>
+            <h3 class="text-danger fw-bold">@string.Format("{0:N0} VNĐ", Model.Product.ProductPrice)</h3>
+            
+
+            @using (Html.BeginForm("AddToCart", "Cart", FormMethod.Post))
+            {
+                <input type="hidden" name="productId" value="@Model.Product.ProductID" />
+                <div class="d-flex align-items-center gap-2 my-3">
+                    <label>Số lượng:</label>
+                    <input type="number" name="quantity" value="1" min="1" class="form-control style-number" style="width: 80px;" />
+                </div>
+                <button type="submit" class="btn btn-danger btn-lg">Thêm vào giỏ hàng</button>
+            }
+        </div>
+    </div>
+
+    <hr class="my-5" />
+
+    <h4>SẢN PHẨM TƯƠNG TỰ</h4>
+    <div class="row mt-3">
+        @foreach (var item in Model.RelatedProducts)
+        {
+            <div class="col-md-3 mb-4">
+                <div class="card h-100">
+                    <img src="~/Content/images/@item.ProductImage" class="card-img-top" style="height: 200px; object-fit: cover;" />
+                    <div class="card-body">
+                        <h6 class="card-title">@item.ProductName</h6>
+                        <p class="text-danger font-weight-bold">@string.Format("{0:N0} VNĐ", item.ProductPrice)</p>
+                        <a href="@Url.Action("ProductDetail", "Home", new { id = item.ProductID })" class="btn btn-sm btn-outline-primary">Xem chi tiết</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

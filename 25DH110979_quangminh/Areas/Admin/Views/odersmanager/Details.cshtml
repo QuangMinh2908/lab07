@@ -1,0 +1,80 @@
+@model _25DH110979_quangminh.Models.Order
+@{
+    ViewBag.Title = "Chi tiết đơn hàng #" + Model.OrderID;
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid mt-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>CHI TIẾT ĐƠN HÀNG #@Model.OrderID</h3>
+        <a href="@Url.Action("Index", "Odersmanager")" class="btn btn-secondary">Quay lại danh sách</a>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Thông tin đơn hàng</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Mã đơn hàng:</strong> #@Model.OrderID</p>
+                    <p><strong>Khách hàng:</strong> @(Model.Customer != null ? Model.Customer.CustomerName : "Khách lẻ")</p>
+                    <p><strong>Số điện thoại:</strong> @(Model.Customer != null ? Model.Customer.CustomerPhone : "N/A")</p>
+                    <p><strong>Ngày đặt:</strong> @Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Địa chỉ giao hàng:</strong> @Model.ShippingAddress</p>
+                    <p><strong>Phương thức vận chuyển:</strong> @Model.DeliveryMethod</p>
+                    <p><strong>Phương thức thanh toán:</strong> @Model.PaymentMethod</p>
+                    <p><strong>Trạng thái:</strong> <span class="badge bg-warning text-dark">@(Model.PaymentStatus ?? "Chờ xử lý")</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">Danh sách sản phẩm trong đơn</h5>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-bordered mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Tên sản phẩm</th>
+                        <th>Hình ảnh</th>
+                        <th class="text-center">Số lượng</th>
+                        <th class="text-end">Đơn giá</th>
+                        <th class="text-end">Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.OrderDetail != null && Model.OrderDetail.Any())
+                    {
+                        foreach (var item in Model.OrderDetail)
+                        {
+                            <tr>
+                                <td>@(item.Product != null ? item.Product.ProductName : "Mã SP #" + item.ProductID)</td>
+                                <td style="width: 80px;">
+                                    @if (item.Product != null)
+                                    {
+                                        <img src="~/Content/images/@(string.IsNullOrEmpty(item.Product.ProductImage) ? "default.png" : item.Product.ProductImage)" 
+                                             class="img-thumbnail" style="width: 60px; height: 50px; object-fit: cover;" alt="SP" />
+                                    }
+                                </td>
+                                <td class="text-center">@item.Quantity</td>
+                                <td class="text-end">@String.Format("{0:N0} đ", item.UnitPrice)</td>
+                                <td class="text-end fw-bold text-danger">@String.Format("{0:N0} đ", item.Quantity * item.UnitPrice)</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+                <tfoot>
+                    <tr class="table-warning fw-bold fs-5">
+                        <td colspan="4" class="text-end">Tổng tiền:</td>
+                        <td class="text-end text-danger">@String.Format("{0:N0} đ", Model.TotalAmount)</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
